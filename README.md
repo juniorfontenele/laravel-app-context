@@ -1,9 +1,9 @@
-# package_description
+# Context on steroids for Laravel applications
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/vendor_slug/package_slug.svg?style=flat-square)](https://packagist.org/packages/vendor_slug/package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/vendor_slug/package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/vendor_slug/package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/vendor_slug/package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/vendor_slug/package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/vendor_slug/package_slug.svg?style=flat-square)](https://packagist.org/packages/vendor_slug/package_slug)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/juniorfontenele/laravel-app-context.svg?style=flat-square)](https://packagist.org/packages/juniorfontenele/laravel-app-context)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/juniorfontenele/laravel-app-context/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/juniorfontenele/laravel-app-context/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/juniorfontenele/laravel-app-context/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/juniorfontenele/laravel-app-context/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/juniorfontenele/laravel-app-context.svg?style=flat-square)](https://packagist.org/packages/juniorfontenele/laravel-app-context)
 <!--delete-->
 ---
 This repo can be used to scaffold a Laravel package. Follow these steps to get started:
@@ -20,20 +20,20 @@ This is where your description should go. Limit it to a paragraph or two. Consid
 You can install the package via composer:
 
 ```bash
-composer require vendor_slug/package_slug
+composer require juniorfontenele/laravel-app-context
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="package_slug-migrations"
+php artisan vendor:publish --tag="laravel-app-context-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="package_slug-config"
+php artisan vendor:publish --tag="laravel-app-context-config"
 ```
 
 This is the contents of the published config file:
@@ -46,14 +46,14 @@ return [
 Optionally, you can publish the views using
 
 ```bash
-php artisan vendor:publish --tag="package_slug-views"
+php artisan vendor:publish --tag="laravel-app-context-views"
 ```
 
 ## Usage
 
 ```php
-$variable = new VendorName\PackageName();
-echo $variable->echoPhrase('Hello, VendorName!');
+$variable = new JuniorFontenele\LaravelAppContext();
+echo $variable->echoPhrase('Hello, JuniorFontenele!');
 ```
 
 ## Testing
@@ -64,7 +64,7 @@ composer test
 
 ## Credits
 
-- [author_name](https://github.com/vendor_slug)
+- [Junior Fontenele](https://github.com/juniorfontenele)
 - [All Contributors](../../contributors)
 
 ## License

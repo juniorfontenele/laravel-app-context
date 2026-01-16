@@ -1,19 +1,19 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "vendor_slug/package_slug",
-    "description": "package_description",
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "name": "juniorfontenele/laravel-app-context",
+    "description": "Context on steroids for Laravel applications",
+    "homepage": "https://github.com/juniorfontenele/laravel-app-context",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "VendorName\\PackageName\\": "src/"
+            "JuniorFontenele\\LaravelAppContext\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "author_name",
-            "email": "author_email@authordomain.com"
+            "name": "Junior Fontenele",
+            "email": "git@juniorfontenele.com.br"
         }
     ],
     "require": {
@@ -24,10 +24,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\PackageName\\PackageNameServiceProvider"
+                "JuniorFontenele\\LaravelAppContext\\LaravelAppContextServiceProvider"
             ],
             "aliases": {
-                "PackageName": "VendorName\\PackageName\\Facades\\PackageName"
+                "LaravelAppContext": "JuniorFontenele\\LaravelAppContext\\Facades\\LaravelAppContext"
             },
             "branch-alias": {
                 "dev-main": "1.x-dev",
