@@ -16,6 +16,7 @@ class AppProvider extends AbstractProvider
                 'url' => config('app.url'),
                 'timezone' => config('app.timezone'),
                 'locale' => config('app.locale'),
+                'called_from' => app()->runningInConsole() ? 'console' : 'web',
             ],
         ];
     }

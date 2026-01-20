@@ -18,8 +18,6 @@ class ContextManager
     /** @var ContextChannel[] */
     protected array $channels = [];
 
-    protected bool $built = false;
-
     public function __construct(protected array $config)
     {
     }
@@ -49,54 +47,34 @@ class ContextManager
     /*
     * Builds the context running the providers
     */
-    public function build(): array
+    public function resolveContext(): array
     {
-        if ($this->built) {
-            return $this->context;
-        }
-
         foreach ($this->providers as $provider) {
             if ($provider->shouldRun()) {
+                $resolvedContext = array_map(function ($value) {
+                    return is_callable($value) ? $value() : $value;
+                }, $provider->getContext());
+
                 $this->context = array_merge(
                     $this->context,
-                    $provider->getContext()
+                    $resolvedContext
                 );
             }
         }
 
-        $this->built = true;
+        $this->sendContextToChannels();
 
         return $this->context;
     }
 
     /**
-     * Sends the built context to all enabled channels
+     * Sends the resolved context to all registered channels
      */
-    public function buildChannelsContext(): void
+    protected function sendContextToChannels(): void
     {
         foreach ($this->channels as $channel) {
-            if ($channel->isEnabled()) {
-                $channel->send($this->resolveContext($this->context));
-            }
+            $channel->send($this->context);
         }
-    }
-
-    /**
-     * Resolves any callable values in the context array
-     */
-    protected function resolveContext(array $context): array
-    {
-        $resolvedContext = [];
-
-        foreach ($context as $key => $value) {
-            if (is_callable($value)) {
-                $resolvedContext[$key] = $value();
-            } else {
-                $resolvedContext[$key] = $value;
-            }
-        }
-
-        return $resolvedContext;
     }
 
     /**
@@ -104,9 +82,7 @@ class ContextManager
      */
     public function all(): array
     {
-        if (! $this->built) {
-            $this->build();
-        }
+        $this->resolveContext();
 
         return $this->context;
     }

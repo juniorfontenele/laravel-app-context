@@ -4,17 +4,13 @@ declare(strict_types = 1);
 
 namespace JuniorFontenele\LaravelAppContext\Channels;
 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Context;
+use JuniorFontenele\LaravelAppContext\Contracts\ContextChannel;
 
-class LogChannel extends AbstractChannel
+class LogChannel implements ContextChannel
 {
-    public function isEnabled(): bool
-    {
-        return $this->config['log']['enabled'] ?? false;
-    }
-
     public function send(array $context): void
     {
-        Log::shareContext($context);
+        Context::add($context);
     }
 }

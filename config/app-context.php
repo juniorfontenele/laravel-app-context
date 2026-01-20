@@ -9,7 +9,7 @@ return [
     |--------------------------------------------------------------------------
     | Disables or enables the Laravel App Context package
     */
-    'enabled' => env('LARAVEL_APP_CONTEXT_ENABLED', false),
+    'enabled' => env('LARAVEL_APP_CONTEXT_ENABLED', true),
 
     /*
     |--------------------------------------------------------------------------
