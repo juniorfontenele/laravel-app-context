@@ -11,7 +11,7 @@ use JuniorFontenele\LaravelAppContext\ContextManager;
  *@method static array all()
  *@method static mixed get(string $key, mixed $default = null)
  *@method static self set(string $key, mixed $value)
- *@method static array build()
+ *@method static array resolveContext()
  *@method static self clear()
  *@method static self addProvider(\JuniorFontenele\LaravelAppContext\Contracts\ContextProvider $provider)
  *@method static self addChannel(\JuniorFontenele\LaravelAppContext\Contracts\ContextChannel $channel)
