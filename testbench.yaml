@@ -1,6 +1,7 @@
 laravel: '@testbench'
 
 providers:
+  - JuniorFontenele\LaravelAppContext\LaravelAppContextServiceProvider
   # - Workbench\App\Providers\WorkbenchServiceProvider
 
 migrations:
