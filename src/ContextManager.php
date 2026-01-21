@@ -69,7 +69,7 @@ class ContextManager
     protected function sendContextToChannels(): void
     {
         foreach ($this->channels as $channel) {
-            $channel->send($this->context);
+            $channel->registerContext($this->context);
         }
     }
 

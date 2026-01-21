@@ -50,13 +50,9 @@ return [
     ],
     
     'channels' => [
-        'log' => JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
-    ],
-    
-    'channel_settings' => [
-        'log' => [
-            'enabled' => env('LARAVEL_APP_CONTEXT_LOG_ENABLED', true),
-        ],
+        JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
+        
+        // Add your custom channels here
     ],
 ];
 ```
@@ -238,7 +234,7 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheChannel implements ContextChannel
 {
-    public function send(array $context): void
+    public function registerContext(array $context): void
     {
         // Register context in cache for later use
         Cache::put('app.context', $context, now()->addMinutes(5));
@@ -258,7 +254,7 @@ use Sentry\State\Scope;
 
 class SentryChannel implements ContextChannel
 {
-    public function send(array $context): void
+    public function registerContext(array $context): void
     {
         // Register context in Sentry for error tracking
         // This context will be included in all Sentry error reports
@@ -285,21 +281,12 @@ Add your custom channel to the `config/app-context.php` file:
 
 ```php
 'channels' => [
-    'log' => JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
-    'sentry' => App\Context\Channels\SentryChannel::class,
-    'cache' => App\Context\Channels\CacheChannel::class,
-],
+    // Built-in channels
+    JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
 
-'channel_settings' => [
-    'log' => [
-        'enabled' => env('LARAVEL_APP_CONTEXT_LOG_ENABLED', true),
-    ],
-    'sentry' => [
-        'enabled' => env('LARAVEL_APP_CONTEXT_SENTRY_ENABLED', false),
-    ],
-    'cache' => [
-        'enabled' => env('LARAVEL_APP_CONTEXT_CACHE_ENABLED', false),
-    ],
+    // Add your custom channels here
+    App\Context\Channels\SentryChannel::class,
+    App\Context\Channels\CacheChannel::class,
 ],
 ```
 
@@ -344,9 +331,6 @@ Control the package behavior with these environment variables:
 ```env
 # Enable/disable the package
 LARAVEL_APP_CONTEXT_ENABLED=true
-
-# Enable/disable specific channels
-LARAVEL_APP_CONTEXT_LOG_ENABLED=true
 ```
 
 ## Use Cases

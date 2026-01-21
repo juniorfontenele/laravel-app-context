@@ -29,10 +29,8 @@ class LaravelAppContextServiceProvider extends ServiceProvider
                 $contextManager->addProvider($this->app->make($providerClass));
             }
 
-            foreach ($config['channels'] as $channelName => $channelClass) {
-                if (config('app-context.channel_settings.' . $channelName . '.enabled', false)) {
-                    $contextManager->addChannel($this->app->make($channelClass));
-                }
+            foreach ($config['channels'] as $channelClass) {
+                $contextManager->addChannel($this->app->make($channelClass));
             }
 
             $contextManager->resolveContext();

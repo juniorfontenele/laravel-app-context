@@ -9,7 +9,7 @@ use JuniorFontenele\LaravelAppContext\Contracts\ContextChannel;
 
 class LogChannel implements ContextChannel
 {
-    public function send(array $context): void
+    public function registerContext(array $context): void
     {
         Context::add($context);
     }

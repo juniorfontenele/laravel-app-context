@@ -7,7 +7,7 @@ namespace JuniorFontenele\LaravelAppContext\Contracts;
 interface ContextChannel
 {
     /**
-     * Send the context to the channel
+     * Register the context in the channel
      */
-    public function send(array $context): void;
+    public function registerContext(array $context): void;
 }

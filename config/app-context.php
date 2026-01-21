@@ -32,31 +32,11 @@ return [
     |--------------------------------------------------------------------------
     | Channels
     |--------------------------------------------------------------------------
-    | Where the context will be sent automatically
+    | Where the context will be registered
     */
     'channels' => [
-        'log' => JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
-    ],
+        JuniorFontenele\LaravelAppContext\Channels\LogChannel::class,
 
-    /*|--------------------------------------------------------------------------
-    | Channel Settings
-    |--------------------------------------------------------------------------
-    | Specific settings for each channel
-    */
-    'channel_settings' => [
-        'log' => [
-            'enabled' => env('LARAVEL_APP_CONTEXT_LOG_ENABLED', true),
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cache
-    |--------------------------------------------------------------------------
-    | Cache the context during the request for better performance
-    */
-    'cache' => [
-        'enabled' => true,
-        'ttl' => null, // null = during the request only
+        // Add your custom channels here
     ],
 ];
