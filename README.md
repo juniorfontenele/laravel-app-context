@@ -135,7 +135,6 @@ The default context includes:
 ```
 
 > **Note**: User, request and timestamp contexts are **always fresh** and automatically updated when authentication state or request data changes. Static contexts (app, host) are cached for optimal performance.
-```
 
 ## Smart Caching System
 
