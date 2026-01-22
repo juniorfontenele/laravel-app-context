@@ -13,28 +13,7 @@ permissions:
   contents: write
 
 jobs:
-  verify_changes:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: read
-    outputs:
-      php: ${{ steps.filter.outputs.php }}
-      tests: ${{ steps.filter.outputs.tests }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            php:
-              - '**/*.php'
-            tests:
-              - 'tests/**'
-
   fix_code_style:
-    needs: verify_changes
-    if: needs.verify_changes.outputs.php == 'true' || needs.verify_changes.outputs.tests == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
