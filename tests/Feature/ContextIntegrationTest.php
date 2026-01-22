@@ -11,13 +11,7 @@ use JuniorFontenele\LaravelAppContext\Providers\TimestampProvider;
 
 describe('Context Integration', function () {
     it('resolves context from multiple providers and sends to channels', function () {
-        $config = [
-            'enabled' => true,
-            'providers' => [],
-            'channels' => [],
-        ];
-
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         // Adicionar providers
         $manager->addProvider(new TimestampProvider());
@@ -45,8 +39,7 @@ describe('Context Integration', function () {
     });
 
     it('can handle empty providers list', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         $context = $manager->all();
 
@@ -54,8 +47,7 @@ describe('Context Integration', function () {
     });
 
     it('merges nested context from different providers', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         // Provider customizado 1
         $provider1 = new class extends JuniorFontenele\LaravelAppContext\Providers\AbstractProvider
@@ -94,8 +86,7 @@ describe('Context Integration', function () {
     });
 
     it('allows setting custom context alongside provider context', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         $manager->addProvider(new TimestampProvider());
         $manager->build(); // Resolve primeiro
@@ -108,8 +99,7 @@ describe('Context Integration', function () {
     });
 
     it('can clear and rebuild context', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         $manager->addProvider(new TimestampProvider());
         $context1 = $manager->all();
@@ -129,8 +119,7 @@ describe('Context Integration', function () {
     });
 
     it('context is shared across multiple channel instances', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         $manager->addProvider(new TimestampProvider());
 
@@ -145,8 +134,7 @@ describe('Context Integration', function () {
     });
 
     it('processes providers in order', function () {
-        $config = ['enabled' => true];
-        $manager = new ContextManager($config);
+        $manager = new ContextManager();
 
         $order = [];
 

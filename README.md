@@ -84,15 +84,21 @@ if (AppContext::has('user.id')) {
 // Set a custom value
 AppContext::set('custom.key', 'custom value');
 
-// Force recalculation of all context (clears all caches)
-AppContext::refresh();
+// Rebuild context without clearing cache (keeps static data cached)
+AppContext::rebuild();
+
+// Rebuild from scratch (clears all caches and rebuilds)
+AppContext::rebuildFromScratch();
 
 // Clear cache for a specific provider
 use JuniorFontenele\LaravelAppContext\Providers\TimestampProvider;
 AppContext::clearProviderCache(TimestampProvider::class);
 
-// Clear the context
+// Clear the context and cache
 AppContext::clear();
+
+// Reset context and notify channels with empty context
+AppContext::reset();
 ```
 
 ### Context Structure
@@ -435,14 +441,20 @@ AppContext::has(string $key): bool
 // Set a custom value
 AppContext::set(string $key, mixed $value): self
 
-// Force complete recalculation (clears all caches)
-AppContext::refresh(): self
+// Rebuild context without clearing cache
+AppContext::rebuild(): self
+
+// Rebuild from scratch (clears all caches)
+AppContext::rebuildFromScratch(): self
 
 // Clear cache for specific provider
 AppContext::clearProviderCache(string $providerClass): self
 
-// Clear all context
+// Clear all context and cache
 AppContext::clear(): self
+
+// Reset context and notify channels
+AppContext::reset(): self
 
 // Add provider programmatically
 AppContext::addProvider(ContextProvider $provider): self
@@ -464,15 +476,38 @@ if (AppContext::has('user.email')) {
 }
 ```
 
-#### `refresh()`
+#### `rebuild()`
+Rebuilds the context while maintaining cached data from cacheable providers. Use when:
+- You need to refresh dynamic data (user, request, timestamp) but keep static data cached
+- Performance is important and you don't need to invalidate static cache
+
+```php
+// Example: After user updates profile during request
+$user->update(['name' => 'New Name']);
+AppContext::rebuild();
+```
+
+#### `rebuildFromScratch()`
 Rarely needed thanks to smart caching. Use only when:
 - You've manually modified application state outside normal flow
 - You need to force complete recalculation for testing
+- Static configuration has changed and cache needs invalidation
 
 ```php
 // Example: After changing tenant in multi-tenancy
 Tenant::switch($newTenant);
-AppContext::refresh();
+AppContext::rebuildFromScratch();
+```
+
+#### `reset()`
+Clears all context and notifies channels with empty context. Use when:
+- You need to completely reset the context state
+- Testing scenarios where you need clean state
+- End of lifecycle operations
+
+```php
+// Example: In test teardown
+AppContext::reset();
 ```
 
 #### `clearProviderCache()`

@@ -40,7 +40,7 @@ class LaravelAppContextServiceProvider extends ServiceProvider
         $this->app->singleton(ContextManager::class, function ($app): ContextManager {
             $config = config('app-context');
 
-            $contextManager = new ContextManager($config);
+            $contextManager = new ContextManager();
 
             foreach ($config['providers'] as $providerClass) {
                 $contextManager->addProvider($this->app->make($providerClass));

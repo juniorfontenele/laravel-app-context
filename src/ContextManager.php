@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 use JuniorFontenele\LaravelAppContext\Contracts\ContextChannel;
 use JuniorFontenele\LaravelAppContext\Contracts\ContextProvider;
 
-class ContextManager
+final class ContextManager
 {
     protected array $context = [];
 
@@ -23,23 +23,19 @@ class ContextManager
     /** @var array<string, array> */
     protected array $providerCache = [];
 
-    public function __construct(protected array $config)
+    /**
+     * Registers a provider
+     */
+    public function addProvider(ContextProvider $provider): self
     {
-    }
-
-    /*
-    * Registers a provider
-    */
-    public function addProvider(ContextProvider $providers): self
-    {
-        $this->providers[] = $providers;
+        $this->providers[] = $provider;
 
         return $this;
     }
 
-    /*
-    * Registers a channel
-    */
+    /**
+     * Registers a channel
+     */
     public function addChannel(ContextChannel $channel): self
     {
         $this->channels[] = $channel;
@@ -47,9 +43,9 @@ class ContextManager
         return $this;
     }
 
-    /*
-    * Builds the context running the providers
-    */
+    /**
+     * Builds the context running the providers
+     */
     public function build(): self
     {
         $this->context = [];
@@ -73,6 +69,7 @@ class ContextManager
         }
 
         $this->sendContextToChannels();
+
         $this->built = true;
 
         return $this;
@@ -127,9 +124,19 @@ class ContextManager
     }
 
     /**
-     * Clears and rebuilds the context
+     * Rebuilds the context without clearing the cache
      */
-    public function refresh(): self
+    public function rebuild(): self
+    {
+        $this->built = false;
+
+        return $this->build();
+    }
+
+    /**
+     * Clears cache and rebuilds the context from scratch
+     */
+    public function rebuildFromScratch(): self
     {
         $this->clear();
 
@@ -150,13 +157,25 @@ class ContextManager
     }
 
     /**
-     * Clears the current context
+     * Clears the current context and cache
      */
     public function clear(): self
     {
         $this->context = [];
         $this->built = false;
         $this->providerCache = [];
+
+        return $this;
+    }
+
+    /**
+     * Resets the context sending an empty context to channels
+     */
+    public function reset(): self
+    {
+        $this->clear();
+
+        $this->sendContextToChannels();
 
         return $this;
     }

@@ -102,4 +102,54 @@ describe('AppContext Facade', function () {
 
         expect(AppContext::get('nested.deep.key'))->toBe('nested-value');
     });
+
+    it('can call rebuild() method through facade', function () {
+        AppContext::clear();
+        AppContext::addProvider(new TimestampProvider());
+        AppContext::build();
+
+        $result = AppContext::rebuild();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+        expect(AppContext::all())->toHaveKey('timestamp');
+    });
+
+    it('can call rebuildFromScratch() method through facade', function () {
+        AppContext::clear();
+        AppContext::addProvider(new TimestampProvider());
+        AppContext::build();
+
+        $result = AppContext::rebuildFromScratch();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+        expect(AppContext::all())->toHaveKey('timestamp');
+    });
+
+    it('can call reset() method through facade', function () {
+        AppContext::clear();
+        AppContext::addProvider(new TimestampProvider());
+        AppContext::build();
+
+        // Adiciona valor manual
+        AppContext::set('manual.value', 'test');
+        expect(AppContext::has('manual.value'))->toBeTrue();
+
+        $result = AppContext::reset();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+
+        // Após reset, valores manuais devem ter sido limpos
+        // mas providers registrados no service provider podem ter adicionado dados novamente
+        expect(AppContext::has('manual.value'))->toBeFalse();
+    });
+
+    it('can call clearProviderCache() method through facade', function () {
+        AppContext::clear();
+        AppContext::addProvider(new TimestampProvider());
+        AppContext::build();
+
+        $result = AppContext::clearProviderCache(TimestampProvider::class);
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+    });
 });

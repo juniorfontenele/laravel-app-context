@@ -7,16 +7,11 @@ use JuniorFontenele\LaravelAppContext\Contracts\ContextChannel;
 use JuniorFontenele\LaravelAppContext\Contracts\ContextProvider;
 
 beforeEach(function () {
-    $this->config = [
-        'enabled' => true,
-        'providers' => [],
-        'channels' => [],
-    ];
-    $this->manager = new ContextManager($this->config);
+    $this->manager = new ContextManager();
 });
 
 describe('ContextManager', function () {
-    it('can be instantiated with config', function () {
+    it('can be instantiated', function () {
         expect($this->manager)->toBeInstanceOf(ContextManager::class);
     });
 
@@ -165,5 +160,110 @@ describe('ContextManager', function () {
 
         // Após clear, o contexto deve estar vazio
         expect($this->manager->all())->toBeEmpty();
+    });
+
+    it('can rebuild context without clearing cache', function () {
+        $provider = Mockery::mock(ContextProvider::class);
+        $provider->shouldReceive('shouldRun')->andReturn(true);
+        $provider->shouldReceive('isCacheable')->andReturn(true);
+        $provider->shouldReceive('getContext')->once()->andReturn(['cached' => 'value']);
+
+        $this->manager->addProvider($provider);
+        $this->manager->build();
+
+        // Primeiro acesso - provider é chamado
+        expect($this->manager->get('cached'))->toBe('value');
+
+        // Rebuild mantém o cache - provider NÃO é chamado novamente
+        $result = $this->manager->rebuild();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+        expect($this->manager->get('cached'))->toBe('value');
+    });
+
+    it('can rebuild from scratch clearing all cache', function () {
+        $provider = Mockery::mock(ContextProvider::class);
+        $provider->shouldReceive('shouldRun')->andReturn(true);
+        $provider->shouldReceive('isCacheable')->andReturn(true);
+        $provider->shouldReceive('getContext')->twice()->andReturn(['cached' => 'value']);
+
+        $this->manager->addProvider($provider);
+        $this->manager->build();
+
+        // Primeiro acesso - provider é chamado
+        expect($this->manager->get('cached'))->toBe('value');
+
+        // RebuildFromScratch limpa cache - provider é chamado novamente
+        $result = $this->manager->rebuildFromScratch();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+        expect($this->manager->get('cached'))->toBe('value');
+    });
+
+    it('can reset context and notify channels', function () {
+        $provider = Mockery::mock(ContextProvider::class);
+        $provider->shouldReceive('shouldRun')->andReturn(true);
+        $provider->shouldReceive('isCacheable')->andReturn(true);
+        $provider->shouldReceive('getContext')->andReturn(['test' => 'value']);
+
+        $channel = Mockery::mock(ContextChannel::class);
+        // Primeira chamada: build() com contexto normal
+        $channel->shouldReceive('registerContext')
+            ->once()
+            ->with(['test' => 'value']);
+        // Segunda chamada: reset() com contexto vazio
+        $channel->shouldReceive('registerContext')
+            ->once()
+            ->with([]);
+
+        $this->manager->addProvider($provider);
+        $this->manager->addChannel($channel);
+        $this->manager->build();
+
+        // Reset deve limpar e notificar channels com contexto vazio
+        $result = $this->manager->reset();
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+    });
+
+    it('can clear cache for specific provider', function () {
+        $provider = Mockery::mock(ContextProvider::class);
+        $provider->shouldReceive('shouldRun')->andReturn(true);
+        $provider->shouldReceive('isCacheable')->andReturn(true);
+        $provider->shouldReceive('getContext')->once()->andReturn(['cached' => 'value']);
+
+        $this->manager->addProvider($provider);
+        $this->manager->build();
+
+        // Primeiro acesso
+        expect($this->manager->get('cached'))->toBe('value');
+
+        // Limpar cache deste provider específico
+        $providerClass = get_class($provider);
+        $result = $this->manager->clearProviderCache($providerClass);
+
+        expect($result)->toBeInstanceOf(ContextManager::class);
+
+        // Verificar que marca contexto como não construído
+        // (forçará rebuild no próximo acesso)
+    });
+
+    it('rebuild marks context as not built to trigger rebuild on next access', function () {
+        $provider = Mockery::mock(ContextProvider::class);
+        $provider->shouldReceive('shouldRun')->andReturn(true);
+        $provider->shouldReceive('isCacheable')->andReturn(false);
+        $provider->shouldReceive('getContext')->twice()->andReturn(['dynamic' => 'value']);
+
+        $this->manager->addProvider($provider);
+        $this->manager->build();
+
+        // Primeiro all() - já buildado
+        $this->manager->all();
+
+        // Rebuild invalida flag built
+        $this->manager->rebuild();
+
+        // Próximo all() deve rebuildar (provider não cacheable é chamado novamente)
+        $this->manager->all();
     });
 });
