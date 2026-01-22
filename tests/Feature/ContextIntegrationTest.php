@@ -109,9 +109,10 @@ describe('Context Integration', function () {
 
         $manager->clear();
 
-        // Adicionar provider novamente após clear
+        // Adicionar provider novamente após clear e chamar build
         $manager->addProvider(new TimestampProvider());
         sleep(1); // Garantir que o timestamp será diferente
+        $manager->build(); // Necessário porque clear() marca built=true
         $context2 = $manager->all();
 
         expect($context2)->toHaveKey('timestamp');

@@ -7,11 +7,6 @@ use JuniorFontenele\LaravelAppContext\Facades\AppContext;
 use JuniorFontenele\LaravelAppContext\Providers\TimestampProvider;
 
 describe('AppContext Facade', function () {
-    beforeEach(function () {
-        // Limpar o contexto antes de cada teste
-        AppContext::clear();
-    });
-
     it('resolves to ContextManager', function () {
         $facade = AppContext::getFacadeRoot();
 
@@ -109,17 +104,6 @@ describe('AppContext Facade', function () {
         AppContext::build();
 
         $result = AppContext::rebuild();
-
-        expect($result)->toBeInstanceOf(ContextManager::class);
-        expect(AppContext::all())->toHaveKey('timestamp');
-    });
-
-    it('can call rebuildFromScratch() method through facade', function () {
-        AppContext::clear();
-        AppContext::addProvider(new TimestampProvider());
-        AppContext::build();
-
-        $result = AppContext::rebuildFromScratch();
 
         expect($result)->toBeInstanceOf(ContextManager::class);
         expect(AppContext::all())->toHaveKey('timestamp');

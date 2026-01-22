@@ -84,11 +84,8 @@ if (AppContext::has('user.id')) {
 // Set a custom value
 AppContext::set('custom.key', 'custom value');
 
-// Rebuild context without clearing cache (keeps static data cached)
+// Rebuild context from scratch (clears all caches and rebuilds)
 AppContext::rebuild();
-
-// Rebuild from scratch (clears all caches and rebuilds)
-AppContext::rebuildFromScratch();
 
 // Clear cache for a specific provider
 use JuniorFontenele\LaravelAppContext\Providers\TimestampProvider;
@@ -441,11 +438,8 @@ AppContext::has(string $key): bool
 // Set a custom value
 AppContext::set(string $key, mixed $value): self
 
-// Rebuild context without clearing cache
+// Rebuild context from scratch (clears all caches)
 AppContext::rebuild(): self
-
-// Rebuild from scratch (clears all caches)
-AppContext::rebuildFromScratch(): self
 
 // Clear cache for specific provider
 AppContext::clearProviderCache(string $providerClass): self
@@ -477,26 +471,18 @@ if (AppContext::has('user.email')) {
 ```
 
 #### `rebuild()`
-Rebuilds the context while maintaining cached data from cacheable providers. Use when:
-- You need to refresh dynamic data (user, request, timestamp) but keep static data cached
-- Performance is important and you don't need to invalidate static cache
-
-```php
-// Example: After user updates profile during request
-$user->update(['name' => 'New Name']);
-AppContext::rebuild();
-```
-
-#### `rebuildFromScratch()`
-Rarely needed thanks to smart caching. Use only when:
-- You've manually modified application state outside normal flow
-- You need to force complete recalculation for testing
+Clears all caches and rebuilds the context from scratch. Use when:
 - Static configuration has changed and cache needs invalidation
+- You need to force complete recalculation for testing
+- After significant state changes (e.g., tenant switching in multi-tenancy)
 
 ```php
 // Example: After changing tenant in multi-tenancy
 Tenant::switch($newTenant);
-AppContext::rebuildFromScratch();
+AppContext::rebuild();
+
+// Example: In testing when you need fresh context
+AppContext::rebuild();
 ```
 
 #### `reset()`

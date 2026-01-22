@@ -14,7 +14,6 @@ use JuniorFontenele\LaravelAppContext\ContextManager;
  * @method static self set(string $key, mixed $value)
  * @method static self build()
  * @method static self rebuild()
- * @method static self rebuildFromScratch()
  * @method static self clear()
  * @method static self reset()
  * @method static self clearProviderCache(string $providerClass)

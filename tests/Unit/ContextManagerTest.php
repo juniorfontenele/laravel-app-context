@@ -162,25 +162,6 @@ describe('ContextManager', function () {
         expect($this->manager->all())->toBeEmpty();
     });
 
-    it('can rebuild context without clearing cache', function () {
-        $provider = Mockery::mock(ContextProvider::class);
-        $provider->shouldReceive('shouldRun')->andReturn(true);
-        $provider->shouldReceive('isCacheable')->andReturn(true);
-        $provider->shouldReceive('getContext')->once()->andReturn(['cached' => 'value']);
-
-        $this->manager->addProvider($provider);
-        $this->manager->build();
-
-        // Primeiro acesso - provider é chamado
-        expect($this->manager->get('cached'))->toBe('value');
-
-        // Rebuild mantém o cache - provider NÃO é chamado novamente
-        $result = $this->manager->rebuild();
-
-        expect($result)->toBeInstanceOf(ContextManager::class);
-        expect($this->manager->get('cached'))->toBe('value');
-    });
-
     it('can rebuild from scratch clearing all cache', function () {
         $provider = Mockery::mock(ContextProvider::class);
         $provider->shouldReceive('shouldRun')->andReturn(true);
@@ -193,8 +174,8 @@ describe('ContextManager', function () {
         // Primeiro acesso - provider é chamado
         expect($this->manager->get('cached'))->toBe('value');
 
-        // RebuildFromScratch limpa cache - provider é chamado novamente
-        $result = $this->manager->rebuildFromScratch();
+        // rebuild() limpa cache - provider é chamado novamente
+        $result = $this->manager->rebuild();
 
         expect($result)->toBeInstanceOf(ContextManager::class);
         expect($this->manager->get('cached'))->toBe('value');

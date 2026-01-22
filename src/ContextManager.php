@@ -124,19 +124,9 @@ final class ContextManager
     }
 
     /**
-     * Rebuilds the context without clearing the cache
+     * Rebuilds the context clearing the cache
      */
     public function rebuild(): self
-    {
-        $this->built = false;
-
-        return $this->build();
-    }
-
-    /**
-     * Clears cache and rebuilds the context from scratch
-     */
-    public function rebuildFromScratch(): self
     {
         $this->clear();
 
@@ -151,7 +141,6 @@ final class ContextManager
     public function clearProviderCache(string $providerClass): self
     {
         unset($this->providerCache[$providerClass]);
-        $this->built = false;
 
         return $this;
     }
@@ -162,8 +151,8 @@ final class ContextManager
     public function clear(): self
     {
         $this->context = [];
-        $this->built = false;
         $this->providerCache = [];
+        $this->built = true;
 
         return $this;
     }
