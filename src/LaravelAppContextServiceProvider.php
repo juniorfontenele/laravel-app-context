@@ -38,16 +38,16 @@ class LaravelAppContextServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/app-context.php', 'app-context');
 
         $this->app->singleton(ContextManager::class, function ($app): ContextManager {
-            $config = config('app-context');
+            $config = $app['config']->get('app-context');
 
             $contextManager = new ContextManager();
 
             foreach ($config['providers'] as $providerClass) {
-                $contextManager->addProvider($this->app->make($providerClass));
+                $contextManager->addProvider($app->make($providerClass));
             }
 
             foreach ($config['channels'] as $channelClass) {
-                $contextManager->addChannel($this->app->make($channelClass));
+                $contextManager->addChannel($app->make($channelClass));
             }
 
             return $contextManager;

@@ -7,6 +7,7 @@ use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
 use Rector\ValueObject\PhpVersion;
+use RectorLaravel\Rector\MethodCall\ContainerBindConcreteWithClosureOnlyRector;
 use RectorLaravel\Set\LaravelSetProvider;
 
 return RectorConfig::configure()
@@ -23,5 +24,6 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         CompactToVariablesRector::class,
+        ContainerBindConcreteWithClosureOnlyRector::class => [__DIR__ . '/src/LaravelAppContextServiceProvider.php'],
     ])
     ->withCache(__DIR__ . '/storage/rector', FileCacheStorage::class);
